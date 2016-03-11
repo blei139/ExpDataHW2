@@ -1,0 +1,10 @@
+library(ggplot2);
+require(ggplot2);
+NEI <- readRDS("summarySCC_PM25.rds");
+SCC <- readRDS("Source_Classification_Code.rds");
+totEmission <- aggregate(NEI[, 'Emissions'], by=list(NEI$year, NEI$type, NEI$fips == "24510"), FUN=sum);
+totEmission <- subset(totEmission, Group.3 == TRUE);
+png(filename='HW2Exerciseplot3.png', width=900, height=480, units='px');
+p <- ggplot(data=totEmission, aes(x=Group.1, y=x)) + facet_grid(. ~ Group.2) + guides(fill=F) + stat_boxplot(geom ='errorbar') + ylab(expression(paste('PM'[2.5], 'Emissions'))) + xlab('Year') + ggtitle('Emissions Per Type In Baltimore, Maryland') + geom_jitter(alpha=0.10);
+p + geom_boxplot(aes(fill=Group.2));
+dev.off();
